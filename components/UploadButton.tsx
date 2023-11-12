@@ -52,7 +52,7 @@ const UploadDropzone = ({
           clearInterval(interval)
           return prevProgress
         }
-        return prevProgress +  
+        return prevProgress + 5
       })
     }, 500)
 
