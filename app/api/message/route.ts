@@ -9,6 +9,8 @@ import { NextRequest } from 'next/server'
 
 import { OpenAIStream, StreamingTextResponse } from 'ai'
 
+
+
 export const POST = async (req: NextRequest) => {
   // endpoint for asking a question to a pdf file
 
@@ -50,7 +52,7 @@ export const POST = async (req: NextRequest) => {
   })
 
   const pinecone = await getPineconeClient()
-  const pineconeIndex = pinecone.Index('pdfreader')
+  const pineconeIndex = pinecone.Index('quill')
 
   const vectorStore = await PineconeStore.fromExistingIndex(
     embeddings,
@@ -72,7 +74,7 @@ export const POST = async (req: NextRequest) => {
     orderBy: {
       createdAt: 'asc',
     },
-    take: 10,
+    take: 6,
   })
 
   const formattedPrevMessages = prevMessages.map((msg: { isUserMessage: any; text: any; }) => ({
@@ -90,7 +92,7 @@ export const POST = async (req: NextRequest) => {
       {
         role: 'system',
         content:
-          'Use the following pieces of context (or previous conversation if needed) to answer the users question in markdown format, and interact friendly with the users to make them feel more comfortable.',
+          'Use the following pieces of context (or previous conversation if needed) to answer the users question in markdown format and be as friendly as possible so as to make user feel comfortable with you.',
       },
       {
         role: 'user',
@@ -108,7 +110,7 @@ export const POST = async (req: NextRequest) => {
   \n----------------\n
   
   CONTEXT:
-  ${results.map((r: { pageContent: any; }) => r.pageContent).join('\n\n')}
+  ${results.map((r) => r.pageContent).join('\n\n')}
   
   USER INPUT: ${message}`,
       },
@@ -116,7 +118,7 @@ export const POST = async (req: NextRequest) => {
   })
 
   const stream = OpenAIStream(response, {
-    async onCompletion(completion: any) {
+    async onCompletion(completion) {
       await db.message.create({
         data: {
           text: completion,
