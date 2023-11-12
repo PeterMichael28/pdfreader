@@ -26,7 +26,7 @@ const Navbar = async (props: Props) => {
       <span>PDFReader.</span>
      </Link>
 
-     {/* <MobileNav isAuth={!!user} /> */}
+     <MobileNav isAuth={!!user} />
 
      <div className="hidden items-center space-x-4 sm:flex">
       {!user ? (
