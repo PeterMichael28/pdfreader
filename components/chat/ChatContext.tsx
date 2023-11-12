@@ -137,8 +137,7 @@ import {
         let accResponse = ''
   
         while (!done) {
-          const { value, done: doneReading } =
-            await reader.read()
+          const { value, done: doneReading } = await reader.read()
           done = doneReading
           const chunkValue = decoder.decode(value)
   
