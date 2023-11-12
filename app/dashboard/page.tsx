@@ -13,10 +13,9 @@ const DashboardPage = async (props: Props) => {
 
     const { getUser } = getKindeServerSession()
   const user = await getUser()
-
   if (!user || !user.id) redirect('/auth-callback?origin=dashboard')
 
-  const dbUser = await db.user.findUnique({
+  const dbUser = await db.user.findFirst({
     where: {
       id: user.id
     }
